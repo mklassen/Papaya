@@ -1941,7 +1941,8 @@ papaya.viewer.Viewer.prototype.mouseDownEvent = function (me) {
                 }
 
                 this.isContextMode = true;
-            } else if (((me.button === 2) || this.isControlKeyDown || this.isLongTouch) && this.container.contextManager && (this.selectedSlice === this.mainImage)) {
+            } else if (((me.button === 2) || this.isControlKeyDown || this.isLongTouch) && this.container.contextManager && (this.selectedSlice === this.mainImage ||
+              (!this.isLongTouch && (this.selectedSlice !== this.surfaceView) && (this.selectedSlice === this.lowerImageTop || this.selectedSlice === this.lowerImageBot || this.selectedSlice === this.lowerImageBot2)))) {
                 if (this.isLongTouch) {
                     var point = this.convertCurrentCoordinateToScreen(this.mainImage);
                     this.contextMenuMousePositionX = point.x;
