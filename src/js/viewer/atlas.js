@@ -24,6 +24,7 @@ papaya.viewer.Atlas = papaya.viewer.Atlas || function (atlas, container, callbac
     this.currentAtlas = null;
     this.maxLabels = 0;
     this.probabilistic = false;
+    this.boundaryData = atlas.boundaryData;
 
     var loadableImage = container.findLoadableImage(atlas.labels.atlas.header.images.summaryimagefile);
 

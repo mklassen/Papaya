@@ -115,7 +115,10 @@ papaya.ui.Toolbar.MENU_DATA = {
                 {"label": "Crosshairs", "action": "ShowCrosshairs", "type": "checkbox", "method": "isShowingCrosshairs"},
                 {"label": "Ruler", "action": "ShowRuler", "type": "checkbox", "method": "isShowingRuler"},
                 {"type": "spacer", "required": "hasSurface"},
-                {"label": "Surface Planes", "action": "ShowSurfacePlanes", "type": "checkbox", "method": "isShowingSurfacePlanes", "required" : "hasSurface"}
+                {"label": "Surface Planes", "action": "ShowSurfacePlanes", "type": "checkbox", "method": "isShowingSurfacePlanes", "required" : "hasSurface"},
+                {"type": "spacer", "required": "hasBoundaries"},
+                {"label": "Volume Boundaries", "action": "ShowVolumeBoundaries", "type": "checkbox", "method": "isShowingVolumeBoundaries", "required" : "hasVolumeBoundaries"},
+                {"label": "Surface Boundaries", "action": "ShowSurfaceBoundaries", "type": "checkbox", "method": "isShowingSurfaceBoundaries", "required" : "hasSurfaceBoundaries"}
             ]
         },
         {"label": "Settings", "icons": null,
@@ -369,16 +372,25 @@ papaya.ui.Toolbar.prototype.buildToolbar = function () {
 
 papaya.ui.Toolbar.prototype.buildAtlasMenu = function () {
     if (papaya.data) {
-        if (papaya.data.Atlas) {
+        if (papaya.data.Atlases) {
             var items = this.spaceMenu.items;
 
-            items[0] = {"label": papaya.data.Atlas.labels.atlas.header.name, "action": "AtlasChanged-" +
-                papaya.data.Atlas.labels.atlas.header.name, "type": "radiobutton", "method": "isUsingAtlas"};
+            items.length = 0;
 
-            if (papaya.data.Atlas.labels.atlas.header.transformedname) {
-                items[1] = {"label": papaya.data.Atlas.labels.atlas.header.transformedname, "action": "AtlasChanged-" +
-                    papaya.data.Atlas.labels.atlas.header.transformedname, "type": "radiobutton",
-                        "method": "isUsingAtlas"};
+            function addAtlas(key, value) {
+              items.push({"label": value.labels.atlas.header.name, "action": "AtlasChanged-" +
+                key + "-" + value.labels.atlas.header.name, "type": "radiobutton", "method": "isUsingAtlas"});
+
+              if (value.labels.atlas.header.transformedname) {
+                  items.push({"label": value.labels.atlas.header.transformedname, "action": "AtlasChanged-" +
+                      key + "-" + value.labels.atlas.header.transformedname, "type": "radiobutton", "method": "isUsingAtlas"});
+              }
+            }
+
+            for (var key in papaya.data.Atlases) {
+              if (papaya.data.Atlases.hasOwnProperty(key)) {
+                addAtlas(key, papaya.data.Atlases[key]);
+              }
             }
         }
     }
@@ -823,8 +835,16 @@ papaya.ui.Toolbar.prototype.doAction = function (action, file, keepopen) {
             this.viewer.toggleWorldSpace();
             this.viewer.drawViewer(true);
         } else if (action.startsWith("AtlasChanged")) {
-            atlasName = action.substring(action.lastIndexOf("-") + 1);
-            this.viewer.atlas.currentAtlas = atlasName;
+            var names = action.split("-",3);
+            var data = papaya.data.Atlases[names[1]];
+            if (!data.atlas) {
+              data.atlas = new papaya.viewer.Atlas(papaya.data.Atlases[names[1]], this.container, function(){});
+            }
+            this.viewer.atlas = data.atlas;
+            this.viewer.atlas.currentAtlas = names[2];
+            if (papaya.data.hasOwnProperty('configureAtlas')) {
+              papaya.data.configureAtlas(this.viewer);
+            }
             this.viewer.drawViewer(true);
         } else if (action.startsWith("ShowRuler")) {
             if (this.container.preferences.showRuler === "Yes") {
@@ -917,6 +937,26 @@ papaya.ui.Toolbar.prototype.doAction = function (action, file, keepopen) {
                 this.container.preferences.updatePreference("showSurfacePlanes", "Yes");
             }
             this.viewer.drawViewer(false, true);
+            this.closeAllMenus();
+        } else if (action.startsWith("ShowVolumeBoundaries")) {
+            if (this.container.preferences.showVolumeBoundaries === "Yes") {
+                this.container.preferences.updatePreference("showVolumeBoundaries", "No");
+            } else {
+                this.container.preferences.updatePreference("showVolumeBoundaries", "Yes");
+            }
+
+            papaya.data.configureAtlas(this.viewer);
+            this.viewer.drawViewer(false, true);
+            this.closeAllMenus();
+        } else if (action.startsWith("ShowSurfaceBoundaries")) {
+            if (this.container.preferences.showSurfaceBoundaries === "Yes") {
+                this.container.preferences.updatePreference("showSurfaceBoundaries", "No");
+            } else {
+                this.container.preferences.updatePreference("showSurfaceBoundaries", "Yes");
+            }
+
+            papaya.data.configureAtlas(this.viewer);
+            this.viewer.drawViewer(true, true);
             this.closeAllMenus();
         } else if (action.startsWith("ShowSurfaceCrosshairs")) {
             this.viewer.surfaceView.showSurfaceCrosshairs = !this.viewer.surfaceView.showSurfaceCrosshairs;
