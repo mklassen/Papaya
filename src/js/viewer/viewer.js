@@ -389,6 +389,10 @@ papaya.viewer.Viewer.prototype.loadSurface = function (ref, forceUrl, forceEncod
 
     var surface = new papaya.surface.Surface(this.container.display, this.container.params);
 
+    if (this.atlas) {
+        surface.boundaryData = this.atlas.boundaryData;
+    }
+
     if (forceEncode) {
         surface.readEncodedData(ref[0], this.volume, papaya.utilities.ObjectUtils.bind(this, this.initializeSurface));
     } else if ((loadableImage !== null) && (loadableImage.encode !== undefined)) {
@@ -722,6 +726,10 @@ papaya.viewer.Viewer.prototype.finishedLoading = function () {
         this.container.loadingComplete = null;
     }
 
+    if (this.atlas && papaya.data.hasOwnProperty('configureAtlas')) {
+        papaya.data.configureAtlas(this);
+    }
+
     this.container.toolbar.buildToolbar();
     this.container.toolbar.updateImageButtons();
     this.updateWindowTitle();
@@ -912,8 +920,11 @@ papaya.viewer.Viewer.prototype.loadAtlas = function () {
     var viewer = this;
 
     if (this.atlas === null) {
-        this.atlas = new papaya.viewer.Atlas(papaya.data.Atlas, this.container, papaya.utilities.ObjectUtils.bind(viewer,
-            viewer.atlasLoaded));
+        if (!papaya.data.Atlas.data) {
+          papaya.data.Atlas.atlas = new papaya.viewer.Atlas(papaya.data.Atlas, this.container,
+            papaya.utilities.ObjectUtils.bind(viewer, viewer.atlasLoaded));
+        }
+        papaya.Container.atlas = this.atlas = papaya.data.Atlas.atlas;
     }
 };
 
@@ -3450,6 +3461,17 @@ papaya.viewer.Viewer.prototype.isShowingSurfacePlanes = function () {
 papaya.viewer.Viewer.prototype.isShowingSurfaceCrosshairs = function () {
     return (this.surfaceView && this.surfaceView.showSurfaceCrosshairs);
 };
+
+
+papaya.viewer.Viewer.prototype.isShowingVolumeBoundaries = function () {
+    return (this.container.preferences.showVolumeBoundaries === "Yes");
+};
+
+
+papaya.viewer.Viewer.prototype.isShowingSurfaceBoundaries = function () {
+    return (this.container.preferences.showSurfaceBoundaries === "Yes");
+};
+
 
 
 

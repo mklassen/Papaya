@@ -689,3 +689,5 @@ papaya.data.Atlas.labels = {
         }
     }
 };
+
+papaya.data.Atlases = papaya.data.Atlases || { [papaya.data.Atlas.labels.atlas.header.name]: papaya.data.Atlas };

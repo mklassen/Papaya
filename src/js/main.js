@@ -674,6 +674,24 @@ papaya.Container.prototype.hasSurface = function () {
 };
 
 
+papaya.Container.prototype.hasBoundaries = function () {
+    return (this.hasVolumeBoundaries() || this.hasSurfaceBoundaries());
+};
+
+
+papaya.Container.prototype.hasVolumeBoundaries = function() {
+    return (this.viewer && this.viewer.atlas &&
+      this.viewer.atlas.boundaryData && this.viewer.atlas.boundaryData.boundaryimagefile &&
+      this.findLoadableImage(this.viewer.atlas.boundaryData.boundaryimagefile) !== null);
+};
+
+
+papaya.Container.prototype.hasSurfaceBoundaries = function() {
+    return (this.viewer && this.viewer.atlas &&
+      this.viewer.atlas.boundaryData && this.viewer.atlas.boundaryData.boundarysurfacefile &&
+      this.findLoadableImage(this.viewer.atlas.boundaryData.boundarysurfacefile, true) !== null);
+};
+
 
 
 papaya.Container.prototype.getViewerDimensions = function () {
