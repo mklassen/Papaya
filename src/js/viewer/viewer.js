@@ -3432,6 +3432,9 @@ papaya.viewer.Viewer.prototype.addParametric = function (imageIndex) {
             {}, papaya.viewer.ColorTable.PARAMETRIC_COLOR_TABLES[1].name, false, true, this.currentCoord);
         screenVol.negativeScreenVol = overlayNeg;
 
+        overlayNeg.screenMax = -screenVol.screenMax;
+        overlayNeg.screenMin = -screenVol.screenMin;
+
         this.setCurrentScreenVol(this.screenVolumes.length - 1);
         this.drawViewer(true, false);
         this.container.toolbar.buildToolbar();
