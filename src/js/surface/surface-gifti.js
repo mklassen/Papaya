@@ -17,6 +17,7 @@ papaya.surface.SurfaceGIFTI = papaya.surface.SurfaceGIFTI || function () {
     this.triangleData = null;
     this.normalsData = null;
     this.colorsData = null;
+    this.parametricData = null;
     this.onFinishedRead = null;
 };
 
@@ -88,9 +89,19 @@ papaya.surface.SurfaceGIFTI.prototype.readDataColors = function (surf, progress)
         surf.colorsData = surf.gii.getColorsDataArray().getData();
     }
 
-    setTimeout(function() { surf.onFinishedRead(); }, 0);
+    setTimeout(function() { surf.readParametricData(surf, progress); }, 0);
 };
 
+
+papaya.surface.SurfaceGIFTI.prototype.readParametricData = function (surf, progress) {
+    progress(0.9);
+
+    if (surf.gii.getZScoresDataArray() != null) {
+        surf.parametricData = surf.gii.getZScoresDataArray().getData();
+    }
+
+    setTimeout(function() { surf.onFinishedRead(); }, 0);
+};
 
 
 papaya.surface.SurfaceGIFTI.prototype.getNumSurfaces = function () {
