@@ -131,7 +131,6 @@ papaya.ui.MenuItemRange.prototype.buildHTML = function (parentId) {
                 papaya.viewer.ColorTable.LUT_MAX));
             minSliderHtml.css({"left": val + "px"});
             menuItemRange.viewer.drawViewer(false, true);
-            minHtml.val(menuItemRange.dataSource[menuItemRange.method]()[0]);
             menuItemRange.screenVol.updateColorBar();
             sliderHtml.attr("src", menuItemRange.screenVol.colorBar);
         });
@@ -160,7 +159,6 @@ papaya.ui.MenuItemRange.prototype.buildHTML = function (parentId) {
                 papaya.viewer.ColorTable.LUT_MAX));
             maxSliderHtml.css({"left": val + "px"});
             menuItemRange.viewer.drawViewer(false, true);
-            maxHtml.val(menuItemRange.dataSource[menuItemRange.method]()[1]);
             menuItemRange.screenVol.updateColorBar();
             sliderHtml.attr("src", menuItemRange.screenVol.colorBar);
         });
