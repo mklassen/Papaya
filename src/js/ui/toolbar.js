@@ -606,7 +606,7 @@ papaya.ui.Toolbar.prototype.doUpdateImageButtons = function () {
             }
 
             if (!this.container.combineParametric || !screenVol.parametric) {
-                this.imageMenus.push((this.buildMenu(data.menus[0], null, screenVol, ctr.toString())));
+                this.imageMenus.unshift((this.buildMenu(data.menus[0], null, screenVol, ctr.toString())));
             }
         }
     }
