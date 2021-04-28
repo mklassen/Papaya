@@ -2673,10 +2673,24 @@ papaya.viewer.Viewer.prototype.getSurfaceNumTriangles = function (index) {
 
 
 papaya.viewer.Viewer.prototype.getNiceFilename = function (index) {
-    var truncateText, filename;
+    var truncateText, filename, data;
+    var found = false;
 
     truncateText = "...";
-    filename = this.screenVolumes[index].volume.fileName.replace(".nii", "").replace(".gz", "");
+
+    filename = this.screenVolumes[index].volume.fileName;
+    for (var ctr=0; ctr<papayaLoadableImages.length; ctr++) {
+        data = papayaLoadableImages[ctr];
+        if (data.hasOwnProperty('url') && data.hasOwnProperty('nicename') && data.url.endsWith(filename)) {
+            filename = data.nicename;
+            found = true;
+            break;
+        }
+    }
+
+    if (!found) {
+      filename = filename.replace(".nii", "").replace(".gz", "");
+    }
 
     if (filename.length > papaya.viewer.Viewer.TITLE_MAX_LENGTH) {
         filename = filename.substr(0, papaya.viewer.Viewer.TITLE_MAX_LENGTH - truncateText.length) + truncateText;
