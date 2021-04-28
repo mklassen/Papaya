@@ -325,6 +325,12 @@ papaya.viewer.Viewer.prototype.loadBaseImage = function (refs, forceUrl, forceEn
 
 papaya.viewer.Viewer.prototype.loadOverlay = function (refs, forceUrl, forceEncode, forceBinary) {
     var imageRefs, loadableImage = this.container.findLoadableImage(refs);
+    for (var ctr=0; ctr < this.screenVolumes.length; ctr++) {
+      if (loadableImage && loadableImage.url && this.screenVolumes[ctr].volume.urls.indexOf(loadableImage.url) > -1) {
+        return;
+      }
+    }
+
     this.loadingVolume = new papaya.volume.Volume(this.container.display, this, this.container.params);
 
     if (this.screenVolumes.length > papaya.viewer.Viewer.MAX_OVERLAYS) {
@@ -374,6 +380,11 @@ papaya.viewer.Viewer.prototype.loadSurface = function (ref, forceUrl, forceEncod
     if (this.screenVolumes.length == 0) {
         this.container.display.drawError("Load an image before loading a surface!");
         return;
+    }
+    for (var ctr=0; ctr < this.surfaces.length; ctr++) {
+      if (loadableImage.url.endsWith(this.surfaces[ctr].filename)) {
+        return;
+      }
     }
 
     var surface = new papaya.surface.Surface(this.container.display, this.container.params);
