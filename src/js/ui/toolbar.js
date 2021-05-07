@@ -931,13 +931,32 @@ papaya.ui.Toolbar.prototype.doAction = function (action, file, keepopen) {
             this.closeAllMenus();
         } else if (action.startsWith("rotation")) {
             this.viewer.screenVolumes[0].updateTransform();
+            for (ctr=1; ctr < this.viewer.screenVolumes.length; ctr++) {
+              this.viewer.screenVolumes[ctr].rotationX = this.viewer.screenVolumes[0].rotationX;
+              this.viewer.screenVolumes[ctr].rotationY = this.viewer.screenVolumes[0].rotationY;
+              this.viewer.screenVolumes[ctr].rotationZ = this.viewer.screenVolumes[0].rotationZ;
+              this.viewer.screenVolumes[ctr].rotationAbout = this.viewer.screenVolumes[0].rotationAbout;
+              this.viewer.screenVolumes[ctr].updateTransform()
+            }
+            this.viewer.surfaceView.updateActivePlanes();
         } else if (action.startsWith("Rotate About")) {
             this.viewer.screenVolumes[0].rotationAbout = action.substring(0, action.indexOf("-"));
             this.viewer.screenVolumes[0].updateTransform();
+            for (var ctr=1; ctr < this.viewer.screenVolumes.length; ctr++) {
+              this.viewer.screenVolumes[ctr].rotationX = this.viewer.screenVolumes[0].rotationX;
+              this.viewer.screenVolumes[ctr].rotationY = this.viewer.screenVolumes[0].rotationY;
+              this.viewer.screenVolumes[ctr].rotationZ = this.viewer.screenVolumes[0].rotationZ;
+              this.viewer.screenVolumes[ctr].rotationAbout = this.viewer.screenVolumes[0].rotationAbout;
+              this.viewer.screenVolumes[ctr].updateTransform()
+            }
+            this.viewer.surfaceView.updateActivePlanes();
             this.viewer.drawViewer(true, false);
         } else if (action.startsWith("ResetTransform")) {
-            this.viewer.screenVolumes[0].resetTransform();
-            this.viewer.screenVolumes[0].updateTransform();
+            for (ctr=0; ctr < this.viewer.screenVolumes.length; ctr++) {
+              this.viewer.screenVolumes[ctr].resetTransform();
+              this.viewer.screenVolumes[ctr].updateTransform();
+            }
+            this.viewer.surfaceView.updateActivePlanes();
             this.viewer.drawViewer(true, false);
         }
     }

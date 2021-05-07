@@ -142,22 +142,24 @@ papaya.viewer.Display.prototype.drawDisplay = function (xLoc, yLoc, zLoc) {
         this.context.font = (papaya.viewer.Display.FONT_SIZE_COORDINATE_VALUE - (smallViewer ? 2 : 0)) + "px " +
             papaya.viewer.Display.FONT_TYPE_COORDINATE_VALUE;
 
+        var pos = this.viewer.getIndexAt(xLoc, yLoc, zLoc);
+
         if (this.viewer.worldSpace) {
             viewerOrigin = this.viewer.screenVolumes[0].volume.header.origin;  // base image origin
             viewerVoxelDims = this.viewer.screenVolumes[0].volume.header.voxelDimensions;
             precision = Math.min(papaya.viewer.Display.PRECISION_COORDINATE_MAX,
                 (Math.round(papaya.viewer.Display.PRECISION_COORDINATE_VALUE * sizeRatio)));
-            this.context.fillText(parseFloat(((xLoc - viewerOrigin.x) * viewerVoxelDims.xSize).toString().substr(0,
+            this.context.fillText(parseFloat(((pos.x - viewerOrigin.x) * viewerVoxelDims.xSize).toString().substr(0,
                 precision)), 1.5 * papaya.viewer.Display.PADDING, locY);
-            this.context.fillText(parseFloat(((viewerOrigin.y - yLoc) * viewerVoxelDims.ySize).toString().substr(0,
+            this.context.fillText(parseFloat(((viewerOrigin.y - pos.y) * viewerVoxelDims.ySize).toString().substr(0,
                 precision)), 1.5 * papaya.viewer.Display.PADDING + coordinateItemWidth, locY);
-            this.context.fillText(parseFloat(((viewerOrigin.z - zLoc) * viewerVoxelDims.zSize).toString().substr(0,
+            this.context.fillText(parseFloat(((viewerOrigin.z - pos.z) * viewerVoxelDims.zSize).toString().substr(0,
                 precision)), 1.5 * papaya.viewer.Display.PADDING + (2 * coordinateItemWidth), locY);
         } else {
-            this.context.fillText(Math.round(xLoc).toString(), 1.5 * papaya.viewer.Display.PADDING, locY);
-            this.context.fillText(Math.round(yLoc).toString(), 1.5 * papaya.viewer.Display.PADDING +
+            this.context.fillText(Math.round(pos.x).toString(), 1.5 * papaya.viewer.Display.PADDING, locY);
+            this.context.fillText(Math.round(pos.y).toString(), 1.5 * papaya.viewer.Display.PADDING +
                 coordinateItemWidth, locY);
-            this.context.fillText(Math.round(zLoc).toString(), 1.5 * papaya.viewer.Display.PADDING +
+            this.context.fillText(Math.round(pos.z).toString(), 1.5 * papaya.viewer.Display.PADDING +
                 (2 * coordinateItemWidth), locY);
         }
 
@@ -181,10 +183,10 @@ papaya.viewer.Display.prototype.drawDisplay = function (xLoc, yLoc, zLoc) {
         // atlas labels
         if (this.viewer.atlas && (!this.viewer.atlas.volume || this.viewer.atlas.volume.isLoaded)) {
             if (papaya.Container.atlasWorldSpace) {
-                this.viewer.getWorldCoordinateAtIndex(xLoc, yLoc, zLoc, this.tempCoord);
-                atlasLabel = this.viewer.atlas.getLabelAtCoordinate(this.tempCoord.x, this.tempCoord.y, this.tempCoord.z, xLoc, yLoc, zLoc);
+                this.viewer.getWorldCoordinateAtIndex(pos.x, pos.y, pos.z, this.tempCoord);
+                atlasLabel = this.viewer.atlas.getLabelAtCoordinate(this.tempCoord.x, this.tempCoord.y, this.tempCoord.z, pos.x, pos.y, pos.z);
             } else {
-                atlasLabel = this.viewer.atlas.getLabelAtCoordinate(xLoc, yLoc, zLoc, xLoc, yLoc, zLoc);
+                atlasLabel = this.viewer.atlas.getLabelAtCoordinate(pos.x, pos.y, pos.z, pos.x, pos.y, pos.z);
             }
 
             atlasNumLabels = atlasLabel.length;

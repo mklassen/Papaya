@@ -23,6 +23,7 @@ papaya.volume.Transform = papaya.volume.Transform || function (mat, volume) {
     this.mmMat = papaya.volume.Transform.IDENTITY.clone();
     this.worldMat = papaya.volume.Transform.IDENTITY.clone();
     this.worldMatNifti = null;
+    this.matInverse = papaya.volume.Transform.IDENTITY.clone();
     this.originMat = papaya.volume.Transform.IDENTITY.clone();
     this.tempMat = papaya.volume.Transform.IDENTITY.clone();
     this.tempMat2 = papaya.volume.Transform.IDENTITY.clone();
@@ -462,24 +463,81 @@ papaya.volume.Transform.prototype.updateWorldMat = function () {
                 (this.worldMatNifti[ctrOut][3] * this.tempMat2[3][ctrIn]);
             }
         }
+
+        for (ctrOut = 0; ctrOut < 3; ctrOut += 1) {
+            for (ctrIn = 0; ctrIn < 3; ctrIn += 1) {
+                this.matInverse[ctrOut][ctrIn] = this.tempMat2[ctrIn][ctrOut];
+            }
+        }
+        this.matInverse[0][3] = -(this.tempMat2[0][0] * this.tempMat2[0][3] + this.tempMat2[1][0] * this.tempMat2[1][3] + this.tempMat2[2][0] * this.tempMat2[2][3]);
+        this.matInverse[1][3] = -(this.tempMat2[0][1] * this.tempMat2[1][3] + this.tempMat2[1][1] * this.tempMat2[1][3] + this.tempMat2[2][1] * this.tempMat2[2][3]);
+        this.matInverse[2][3] = -(this.tempMat2[0][2] * this.tempMat2[1][3] + this.tempMat2[1][2] * this.tempMat2[1][3] + this.tempMat2[2][2] * this.tempMat2[2][3]);
     } else {
+
         for (ctrOut = 0; ctrOut < 4; ctrOut += 1) {
             for (ctrIn = 0; ctrIn < 4; ctrIn += 1) {
-                this.tempMat[ctrOut][ctrIn] = (this.indexMat[ctrOut][0] * this.originMat[0][ctrIn]) +
-                (this.indexMat[ctrOut][1] * this.originMat[1][ctrIn]) +
-                (this.indexMat[ctrOut][2] * this.originMat[2][ctrIn]) +
-                (this.indexMat[ctrOut][3] * this.originMat[3][ctrIn]);
+                this.tempMat[ctrOut][ctrIn] = (this.originMat[ctrOut][0] * this.sizeMatInverse[0][ctrIn]) +
+                (this.originMat[ctrOut][1] * this.sizeMatInverse[1][ctrIn]) +
+                (this.originMat[ctrOut][2] * this.sizeMatInverse[2][ctrIn]) +
+                (this.originMat[ctrOut][3] * this.sizeMatInverse[3][ctrIn]);
             }
         }
 
         for (ctrOut = 0; ctrOut < 4; ctrOut += 1) {
             for (ctrIn = 0; ctrIn < 4; ctrIn += 1) {
-                this.worldMat[ctrOut][ctrIn] = (this.tempMat[ctrOut][0] * this.sizeMatInverse[0][ctrIn]) +
-                (this.tempMat[ctrOut][1] * this.sizeMatInverse[1][ctrIn]) +
-                (this.tempMat[ctrOut][2] * this.sizeMatInverse[2][ctrIn]) +
-                (this.tempMat[ctrOut][3] * this.sizeMatInverse[3][ctrIn]);
+                this.worldMat[ctrOut][ctrIn] = (this.indexMat[ctrOut][0] * this.tempMat[0][ctrIn]) +
+                (this.indexMat[ctrOut][1] * this.tempMat[1][ctrIn]) +
+                (this.indexMat[ctrOut][2] * this.tempMat[2][ctrIn]) +
+                (this.indexMat[ctrOut][3] * this.tempMat[3][ctrIn]);
             }
         }
+
+
+        for (ctrOut = 0; ctrOut < 4; ctrOut += 1) {
+            for (ctrIn = 0; ctrIn < 4; ctrIn += 1) {
+                this.tempMat2[ctrOut][ctrIn] = (this.mat[ctrOut][0] * this.tempMat[0][ctrIn]) +
+                (this.mat[ctrOut][1] * this.tempMat[1][ctrIn]) +
+                (this.mat[ctrOut][2] * this.tempMat[2][ctrIn]) +
+                (this.mat[ctrOut][3] * this.tempMat[3][ctrIn]);
+            }
+        }
+
+        // Inverse of originMat
+        for (ctrOut = 0; ctrOut < 3; ctrOut += 1) {
+            for (ctrIn = 0; ctrIn < 3; ctrIn += 1) {
+                this.matInverse[ctrOut][ctrIn] = this.originMat[ctrIn][ctrOut];
+            }
+        }
+        this.matInverse[0][3] = -(this.originMat[0][0] * this.originMat[0][3] + this.originMat[1][0] * this.originMat[1][3] + this.originMat[2][0] * this.originMat[2][3]);
+        this.matInverse[1][3] = -(this.originMat[0][1] * this.originMat[0][3] + this.originMat[1][1] * this.originMat[1][3] + this.originMat[2][1] * this.originMat[2][3]);
+        this.matInverse[2][3] = -(this.originMat[0][2] * this.originMat[0][3] + this.originMat[1][2] * this.originMat[1][3] + this.originMat[2][2] * this.originMat[2][3]);
+
+        for (ctrOut = 0; ctrOut < 4; ctrOut += 1) {
+            for (ctrIn = 0; ctrIn < 4; ctrIn += 1) {
+                this.tempMat[ctrOut][ctrIn] = (this.matInverse[ctrOut][0] * this.tempMat2[0][ctrIn]) +
+                (this.matInverse[ctrOut][1] * this.tempMat2[1][ctrIn]) +
+                (this.matInverse[ctrOut][2] * this.tempMat2[2][ctrIn]) +
+                (this.matInverse[ctrOut][3] * this.tempMat2[3][ctrIn]);
+            }
+        }
+
+        for (ctrOut = 0; ctrOut < 4; ctrOut += 1) {
+            for (ctrIn = 0; ctrIn < 4; ctrIn += 1) {
+                this.tempMat2[ctrOut][ctrIn] = (this.sizeMat[ctrOut][0] * this.tempMat[0][ctrIn]) +
+                (this.sizeMat[ctrOut][1] * this.tempMat[1][ctrIn]) +
+                (this.sizeMat[ctrOut][2] * this.tempMat[2][ctrIn]) +
+                (this.sizeMat[ctrOut][3] * this.tempMat[3][ctrIn]);
+            }
+        }
+
+        for (ctrOut = 0; ctrOut < 3; ctrOut += 1) {
+            for (ctrIn = 0; ctrIn < 3; ctrIn += 1) {
+                this.matInverse[ctrOut][ctrIn] = this.tempMat2[ctrIn][ctrOut];
+            }
+        }
+        this.matInverse[0][3] = -(this.tempMat2[0][0] * this.tempMat2[0][3] + this.tempMat2[1][0] * this.tempMat2[1][3] + this.tempMat2[2][0] * this.tempMat2[2][3]);
+        this.matInverse[1][3] = -(this.tempMat2[0][1] * this.tempMat2[0][3] + this.tempMat2[1][1] * this.tempMat2[1][3] + this.tempMat2[2][1] * this.tempMat2[2][3]);
+        this.matInverse[2][3] = -(this.tempMat2[0][2] * this.tempMat2[0][3] + this.tempMat2[1][2] * this.tempMat2[1][3] + this.tempMat2[2][2] * this.tempMat2[2][3]);
     }
 };
 
@@ -522,24 +580,41 @@ papaya.volume.Transform.prototype.getVoxelAtIndex = function (ctrX, ctrY, ctrZ, 
 
 
 papaya.volume.Transform.prototype.getVoxelAtCoordinate = function (xLoc, yLoc, zLoc, timepoint, useNN) {
-    var xTrans, yTrans, zTrans;
-    xTrans = ((xLoc * this.worldMat[0][0]) + (yLoc * this.worldMat[0][1]) + (zLoc * this.worldMat[0][2]) +
-        (this.worldMat[0][3]));
-    yTrans = ((xLoc * this.worldMat[1][0]) + (yLoc * this.worldMat[1][1]) + (zLoc * this.worldMat[1][2]) +
-        (this.worldMat[1][3]));
-    zTrans = ((xLoc * this.worldMat[2][0]) + (yLoc * this.worldMat[2][1]) + (zLoc * this.worldMat[2][2]) +
-        (this.worldMat[2][3]));
-
-    return this.voxelValue.getVoxelAtIndexNative(xTrans, yTrans, zTrans, timepoint, useNN);
+    var pos = this.getIndexAtCoordinate(xLoc, yLoc, zLoc);
+    return this.voxelValue.getVoxelAtIndexNative(pos.x, pos.y, pos.z, timepoint, useNN);
 };
 
 
+papaya.volume.Transform.prototype.getIndexAtCoordinate = function (xLoc, yLoc, zLoc) {
+    var pos = [];
+    pos.x = ((xLoc * this.worldMat[0][0]) + (yLoc * this.worldMat[0][1]) + (zLoc * this.worldMat[0][2]) +
+              (this.worldMat[0][3]));
+    pos.y = ((xLoc * this.worldMat[1][0]) + (yLoc * this.worldMat[1][1]) + (zLoc * this.worldMat[1][2]) +
+              (this.worldMat[1][3]));
+    pos.z = ((xLoc * this.worldMat[2][0]) + (yLoc * this.worldMat[2][1]) + (zLoc * this.worldMat[2][2]) +
+              (this.worldMat[2][3]));
+    return pos;
+}
 
 papaya.volume.Transform.prototype.getVoxelAtMM = function (xLoc, yLoc, zLoc, timepoint, useNN) {
-    var xTrans, yTrans, zTrans;
-    xTrans = ((xLoc * this.mmMat[0][0]) + (yLoc * this.mmMat[0][1]) + (zLoc * this.mmMat[0][2]) + (this.mmMat[0][3]));
-    yTrans = ((xLoc * this.mmMat[1][0]) + (yLoc * this.mmMat[1][1]) + (zLoc * this.mmMat[1][2]) + (this.mmMat[1][3]));
-    zTrans = ((xLoc * this.mmMat[2][0]) + (yLoc * this.mmMat[2][1]) + (zLoc * this.mmMat[2][2]) + (this.mmMat[2][3]));
+    var pos = this.getIndexAtMM(xLoc, yLoc, zLoc);
+    return this.voxelValue.getVoxelAtIndexNative(pos.x, pos.y, pos.z, timepoint, useNN);
+};
 
-    return this.voxelValue.getVoxelAtIndexNative(xTrans, yTrans, zTrans, timepoint, useNN);
+
+papaya.volume.Transform.prototype.getIndexAtMM = function (xLoc, yLoc, zLoc) {
+    var pos = [];
+    pos.x = ((xLoc * this.mmMat[0][0]) + (yLoc * this.mmMat[0][1]) + (zLoc * this.mmMat[0][2]) + (this.mmMat[0][3]));
+    pos.y = ((xLoc * this.mmMat[1][0]) + (yLoc * this.mmMat[1][1]) + (zLoc * this.mmMat[1][2]) + (this.mmMat[1][3]));
+    pos.z = ((xLoc * this.mmMat[2][0]) + (yLoc * this.mmMat[2][1]) + (zLoc * this.mmMat[2][2]) + (this.mmMat[2][3]));
+    return pos;
+};
+
+
+papaya.volume.Transform.prototype.getRotatedCoordinate = function(xLoc, yLoc, zLoc) {
+    var pos = [];
+    pos.x = ((xLoc * this.matInverse[0][0]) + (yLoc * this.matInverse[0][1]) + (zLoc * this.matInverse[0][2]) + (this.matInverse[0][3]));
+    pos.y = ((xLoc * this.matInverse[1][0]) + (yLoc * this.matInverse[1][1]) + (zLoc * this.matInverse[1][2]) + (this.matInverse[1][3]));
+    pos.z = ((xLoc * this.matInverse[2][0]) + (yLoc * this.matInverse[2][1]) + (zLoc * this.matInverse[2][2]) + (this.matInverse[2][3]));
+    return pos;
 };
