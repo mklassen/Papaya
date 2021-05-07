@@ -411,7 +411,7 @@ papaya.viewer.ScreenSurface.prototype.initBuffers = function (gl, surface) {
     if (surface.colorsData) {
         surface.colorsBuffer = gl.createBuffer();
         gl.bindBuffer(gl.ARRAY_BUFFER, surface.colorsBuffer);
-        gl.bufferData(gl.ARRAY_BUFFER, surface.colorsData, gl.STATIC_DRAW);
+        gl.bufferData(gl.ARRAY_BUFFER, surface.colorsData, gl.DYNAMIC_DRAW);
         surface.colorsBuffer.itemSize = 4;
         surface.colorsBuffer.numItems = surface.numPoints;
     }
@@ -801,6 +801,7 @@ papaya.viewer.ScreenSurface.prototype.renderSurface = function (gl, index, isTra
     if (this.surfaces[index].colorsData) {
         gl.uniform1i(this.shaderProgram.hasColors, 1);
         gl.bindBuffer(gl.ARRAY_BUFFER, this.surfaces[index].colorsBuffer);
+        gl.bufferData(gl.ARRAY_BUFFER, this.surfaces[index].colorsData, gl.DYNAMIC_DRAW);
         gl.enableVertexAttribArray(this.shaderProgram.vertexColorAttribute);
         gl.vertexAttribPointer(this.shaderProgram.vertexColorAttribute, this.surfaces[index].colorsBuffer.itemSize,
             gl.FLOAT, false, 0, 0);

@@ -33,6 +33,8 @@ papaya.surface.Surface = papaya.surface.Surface || function (progressMeter, para
     this.nextSurface = null;
     this.volume = null;
     this.alpha = 1;
+    this.parametricData = [];
+    this.boundaryData = null;
 };
 
 /*** Static Pseudo-constants ***/
@@ -264,6 +266,12 @@ papaya.surface.Surface.prototype.finishedReading = function () {
                 currentSurface = currentSurface.nextSurface;
             }
 
+            if (this.fileFormat.getSolidColor(ctr)) {
+                currentSurface.solidColor = this.fileFormat.getSolidColor(ctr);
+            }
+
+            currentSurface.generateColorData();
+
             currentSurface.numPoints = this.fileFormat.getNumPoints(ctr);
             currentSurface.numTriangles = this.fileFormat.getNumTriangles(ctr);
             currentSurface.pointData = this.fileFormat.getPointData(ctr);
@@ -273,10 +281,6 @@ papaya.surface.Surface.prototype.finishedReading = function () {
 
             if (currentSurface.normalsData === null) {
                 this.generateNormals();
-            }
-
-            if (this.fileFormat.getSolidColor(ctr)) {
-                currentSurface.solidColor = this.fileFormat.getSolidColor(ctr);
             }
         }
     }
@@ -348,3 +352,132 @@ papaya.surface.Surface.prototype.generateNormals = function () {
         this.normalsData[ctr + 2] = nn[2];
     }
 };
+
+
+papaya.surface.Surface.prototype.generateColorData = function () {
+  var rgba = this.fileFormat.colorsData;
+  var nPoints = this.fileFormat.getNumPoints();
+
+  if (rgba == null) {
+    var nArray = 4 * nPoints;
+    this.fileFormat.colorsData = rgba = new Float32Array(nArray);
+  }
+
+  var ctr;
+  var ctr2;
+  var data = [];
+  for (ctr=0; ctr < this.parametricData.length; ctr++) {
+    if (this.parametricData[ctr].data && this.parametricData[ctr].data.length === nPoints) {
+      this.parametricData[ctr].positiveVolume = null;
+      this.parametricData[ctr].negativeVolume = null;
+      for(ctr2 = 0; ctr2 < this.parametricData[ctr].viewer.screenVolumes.length; ctr2++) {
+        if (this.parametricData[ctr].viewer.screenVolumes[ctr2].volume === this.parametricData[ctr].volume) {
+          if (this.parametricData[ctr].viewer.screenVolumes[ctr2].negative) {
+            this.parametricData[ctr].negativeVolume = this.parametricData[ctr].viewer.screenVolumes[ctr2];
+          } else {
+            this.parametricData[ctr].positiveVolume = this.parametricData[ctr].viewer.screenVolumes[ctr2];
+          }
+        }
+      }
+      this.parametricData[ctr].mapper = getColor;
+      data.push(this.parametricData[ctr]);
+    }
+  }
+  if (this.boundaryData != null &&
+    this.boundaryData.data != null &&
+    this.boundaryData.data.length){
+    this.boundaryData.mapper = binaryMapper;
+    data.push(this.boundaryData);
+  }
+
+  if (data.length < 1) {
+    rgba.fill(1,0,4*nPoints);
+    return;
+  }
+
+  var baseColor = this.solidColor ? {r: this.solidColor[0], g: this.solidColor[1], b: this.solidColor[2], a: 1}
+                                  : {r:1,g:1,b:1,a:1};
+
+  var color, color1;
+  var index = 0;
+  for (ctr = 0; ctr < nPoints; ctr++) {
+    color = {r: 0, g: 0, b: 0, a: 0};
+    for (ctr2=0; ctr2 < data.length; ctr2++) {
+      color1 = data[ctr2].mapper(data[ctr2].data[ctr], data[ctr2]);
+      color = combine(color, color1);
+    }
+    if (color.a < 1) {
+      color = combine(color, baseColor);
+    }
+    rgba[index++] = color.r;
+    rgba[index++] = color.g;
+    rgba[index++] = color.b;
+    rgba[index++] = color.a;
+  }
+}
+
+
+function binaryMapper(value, boundaryData) {
+  if (value > 0.5) {
+    return {
+      r: 0,
+      g: 0,
+      b: 0,
+      a: boundaryData.range.alpha,
+    };
+  }
+  else {
+    return {
+      r: 1,
+      g: 1,
+      b: 1,
+      a: 1
+    };
+  }
+}
+
+function getColor(value, parametricData) {
+    var color = {r: 0, g: 0, b: 0, a: 0};
+
+    if (parametricData.negativeVolume && value < parametricData.negativeVolume.screenMin ) {
+      if (value >= parametricData.negativeVolume.screenMin) {
+        value = papaya.viewer.ScreenSlice.SCREEN_PIXEL_MIN;
+      } else if (value <= parametricData.negativeVolume.screenMax) {
+        value = papaya.viewer.ScreenSlice.SCREEN_PIXEL_MAX;
+      } else {
+        value = papayaRoundFast((value - parametricData.negativeVolume.screenMin) *
+          parametricData.negativeVolume.screenRatio);
+      }
+      color.r = parametricData.negativeVolume.colorTable.lookupRed(value)/papaya.viewer.ColorTable.LUT_MAX;
+      color.g = parametricData.negativeVolume.colorTable.lookupGreen(value)/papaya.viewer.ColorTable.LUT_MAX;
+      color.b = parametricData.negativeVolume.colorTable.lookupBlue(value)/papaya.viewer.ColorTable.LUT_MAX;
+      color.a = parametricData.negativeVolume.alpha;
+    } else if (parametricData.positiveVolume && value >= parametricData.positiveVolume.screenMin) {
+      if (value <= parametricData.positiveVolume.screenMin) {
+        value = papaya.viewer.ScreenSlice.SCREEN_PIXEL_MIN;
+      } else if (value >= parametricData.positiveVolume.screenMax) {
+        value = papaya.viewer.ScreenSlice.SCREEN_PIXEL_MAX;
+      } else {
+        value = papayaRoundFast((value - parametricData.positiveVolume.screenMin) *
+          parametricData.positiveVolume.screenRatio);
+      }
+      color.r = parametricData.positiveVolume.colorTable.lookupRed(value)/papaya.viewer.ColorTable.LUT_MAX ;
+      color.g = parametricData.positiveVolume.colorTable.lookupGreen(value)/papaya.viewer.ColorTable.LUT_MAX;
+      color.b = parametricData.positiveVolume.colorTable.lookupBlue(value)/papaya.viewer.ColorTable.LUT_MAX;
+      color.a = parametricData.positiveVolume.alpha;
+    }
+    return color;
+}
+
+function combine(color0, color1) {
+  var a01 = (1 - color0.a) * color1.a + color0.a;
+  if (a01 <= Number.EPSILON) {
+    return color0;
+  }
+  return {
+    a: a01,
+    r: ((1 - color0.a) * color1.a * color1.r + color0.a * color0.r) / a01,
+    g: ((1 - color0.a) * color1.a * color1.g + color0.a * color0.g) / a01,
+    b: ((1 - color0.a) * color1.a * color1.b + color0.a * color0.b) / a01
+  };
+}
