@@ -802,6 +802,12 @@ papaya.viewer.Viewer.prototype.initializeOverlay = function () {
                 return;
             }
 
+            overlay.rotationX = this.screenVolumes[0].rotationX;
+            overlay.rotationY = this.screenVolumes[0].rotationY;
+            overlay.rotationZ = this.screenVolumes[0].rotationZ;
+            overlay.rotationAbout = this.screenVolumes[0].rotationAbout;
+            overlay.updateTransform();
+
             this.screenVolumes[this.screenVolumes.length] = overlay;
             this.setCurrentScreenVol(this.screenVolumes.length - 1);
 
@@ -1322,6 +1328,12 @@ papaya.viewer.Viewer.prototype.drawOrientation = function () {
         showOrientation = (this.container.preferences.showOrientation === "Yes");
 
     if (this.mainImage === this.surfaceView) {
+        return;
+    }
+
+    if (this.currentScreenVolume.rotationX !== 0.5 ||
+        this.currentScreenVolume.rotationY !== 0.5 ||
+        this.currentScreenVolume.rotationZ !== 0.5) {
         return;
     }
 
@@ -2494,9 +2506,13 @@ papaya.viewer.Viewer.prototype.getWorldCoordinateAtIndex = function (ctrX, ctrY,
 
 
 papaya.viewer.Viewer.prototype.getIndexCoordinateAtWorld = function (ctrX, ctrY, ctrZ, coord) {
-    coord.setCoordinate((ctrX / this.volume.header.voxelDimensions.xSize) + this.volume.header.origin.x,
-        -1 * ((ctrY / this.volume.header.voxelDimensions.ySize) - this.volume.header.origin.y),
-        -1 * ((ctrZ / this.volume.header.voxelDimensions.zSize) - this.volume.header.origin.z), true);
+    var pos = this.volume.transform.getRotatedCoordinate(ctrX, ctrY, ctrZ);
+
+    pos.x = (pos.x / this.volume.header.voxelDimensions.xSize) + this.volume.header.origin.x;
+    pos.y = -1 * ((pos.y / this.volume.header.voxelDimensions.ySize) - this.volume.header.origin.y);
+    pos.z = -1 * ((pos.z / this.volume.header.voxelDimensions.zSize) - this.volume.header.origin.z);
+
+    coord.setCoordinate(pos.x, pos.y, pos.z, true);
     return coord;
 };
 
@@ -2541,6 +2557,26 @@ papaya.viewer.Viewer.prototype.getCurrentValueAt = function (ctrX, ctrY, ctrZ) {
     }
 };
 
+
+papaya.viewer.Viewer.prototype.getIndexAt = function(ctrX, ctrY, ctrZ, forceWorld) {
+    var pos;
+
+    if (this.worldSpace || forceWorld) {
+        pos = this.screenVolumes[0].volume.transform.getIndexAtCoordinate(
+        (ctrX - this.volume.header.origin.x) * this.volume.header.voxelDimensions.xSize,
+        (this.volume.header.origin.y - ctrY) * this.volume.header.voxelDimensions.ySize,
+        (this.volume.header.origin.z - ctrZ) * this.volume.header.voxelDimensions.zSize);
+    } else {
+        pos = this.screenVolumes[0].volume.transform.getIndexAtMM(
+            ctrX * this.volume.header.voxelDimensions.xSize,
+            ctrY * this.volume.header.voxelDimensions.ySize,
+            ctrZ * this.volume.header.voxelDimensions.zSize);
+    }
+    pos.y = this.volume.header.imageDimensions.yDim - pos.y - 1;
+    pos.z = this.volume.header.imageDimensions.zDim - pos.z - 1;
+
+    return pos;
+};
 
 
 papaya.viewer.Viewer.prototype.resetViewer = function () {

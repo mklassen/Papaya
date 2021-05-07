@@ -607,9 +607,19 @@ papaya.viewer.ScreenVolume.prototype.updateTransform = function () {
         centerY = this.volume.header.origin.y * this.volume.header.voxelDimensions.ySize;
         centerZ = this.volume.header.origin.z * this.volume.header.voxelDimensions.zSize;
     } else if (this.rotationAbout === "Rotate About Crosshairs") {
-        centerX = this.currentCoord.x * this.volume.header.voxelDimensions.xSize;
-        centerY = this.currentCoord.y * this.volume.header.voxelDimensions.ySize;
-        centerZ = this.currentCoord.z * this.volume.header.voxelDimensions.zSize;
+        // Need to use the base image not the current volume
+        // Hacking assuming single papayaContainer, application specific and not generalizable
+        var baseVolume = papayaContainers[0].viewer.screenVolumes[0].volume;
+        if (this.volume === baseVolume) {
+          centerX = this.currentCoord.x * this.volume.header.voxelDimensions.xSize;
+          centerY = this.currentCoord.y * this.volume.header.voxelDimensions.ySize;
+          centerZ = this.currentCoord.z * this.volume.header.voxelDimensions.zSize;
+        }
+        else {
+          centerX = baseVolume.transform.centerMatInverse[0][3];
+          centerY = baseVolume.transform.centerMatInverse[1][3];
+          centerZ = baseVolume.transform.centerMatInverse[2][3];
+        }
     } else {
         centerX = (this.volume.header.imageDimensions.xDim / 2) * this.volume.header.voxelDimensions.xSize;
         centerY = (this.volume.header.imageDimensions.yDim / 2) * this.volume.header.voxelDimensions.ySize;
