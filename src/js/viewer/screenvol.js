@@ -194,6 +194,22 @@ papaya.viewer.ScreenVolume.makeStaticIcon = function (url, cb, index) {
 /*** Prototype Methods ***/
 
 papaya.viewer.ScreenVolume.prototype.setScreenRange = function (min, max) {
+    if (this.negative) {
+        if (min > 0) {
+            min = 0;
+        }
+        if (max > 0) {
+            max = 0;
+        }
+    }
+    else if (this.negativeScreenVol) {
+        if (min < 0) {
+            min = 0;
+        }
+        if (max < 0) {
+            max = 0;
+        }
+    }
     this.screenMin = min;
     this.screenMax = max;
     this.updateScreenRange();

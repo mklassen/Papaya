@@ -2355,9 +2355,17 @@ papaya.viewer.Viewer.prototype.windowLevelChanged = function (contrastChange, br
         minFinal = this.currentScreenVolume.screenMin + (step * papaya.utilities.MathUtils.signum(contrastChange));
         maxFinal = this.currentScreenVolume.screenMax + (-1 * step * papaya.utilities.MathUtils.signum(contrastChange));
 
-        if (maxFinal <= minFinal) {
+        if (this.currentScreenVolume.negative) {
+          if (maxFinal >= minFinal) {
             minFinal = this.currentScreenVolume.screenMin;
             maxFinal = this.currentScreenVolume.screenMin; // yes, min
+          }
+        }
+        else {
+            if (maxFinal <= minFinal) {
+                minFinal = this.currentScreenVolume.screenMin;
+                maxFinal = this.currentScreenVolume.screenMin; // yes, min
+            }
         }
     } else {
         minFinal = this.currentScreenVolume.screenMin + (step * papaya.utilities.MathUtils.signum(brightnessChange));
