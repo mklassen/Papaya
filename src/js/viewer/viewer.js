@@ -1226,6 +1226,11 @@ papaya.viewer.Viewer.prototype.drawViewer = function (force, skipUpdate) {
     }
 
     if (this.hasSurface() && (!papaya.utilities.PlatformUtils.smallScreen || force || (this.selectedSlice === this.surfaceView))) {
+        if (force) {
+          for (var ctr = 0; ctr < this.surfaces.length; ctr++) {
+            this.surfaces[ctr].generateColorData();
+          }
+        }
         this.surfaceView.draw();
     }
 
