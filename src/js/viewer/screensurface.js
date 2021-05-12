@@ -217,10 +217,10 @@ papaya.viewer.ScreenSurface = papaya.viewer.ScreenSurface || function (baseVolum
 
 /*** Static Pseudo-constants ***/
 
-papaya.viewer.ScreenSurface.DEFAULT_ORIENTATION = [ -0.015552218963737041, 0.09408106275544359, -0.9954430697501158, 0,
-                                                    -0.9696501263313991, 0.24152923619118966, 0.03797658948646743, 0,
-                                                    0.24400145970103732, 0.965822108594413, 0.0874693978960848, 0,
-                                                    0, 0, 0, 1];
+papaya.viewer.ScreenSurface.DEFAULT_ORIENTATION = [0.048971585322198447, -0.5197227838697135,    0.8529302568859667, 0,
+                                                   0.9973082748260628,   -0.021211909620762606, -0.0701863275311922, 0,
+                                                   0.0545697721466714,    0.8540715289187434,    0.5172851540944708, 0,
+                                                   0,0,0,1]
 papaya.viewer.ScreenSurface.MOUSE_SENSITIVITY = 0.3;
 papaya.viewer.ScreenSurface.DEFAULT_BACKGROUND = [0.5, 0.5, 0.5];
 papaya.viewer.ScreenSurface.TEXT_SIZE = 50;
