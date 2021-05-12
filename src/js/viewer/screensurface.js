@@ -1064,6 +1064,13 @@ papaya.viewer.ScreenSurface.prototype.updateCurrent = function () {
 };
 
 
+papaya.viewer.ScreenSurface.prototype.resetRotation = function () {
+    this.updateCurrent();
+    this.mouseTransCurrent = this.clearTransform([]);
+    mat4.multiply(this.centerMat, papaya.viewer.ScreenSurface.DEFAULT_ORIENTATION, this.tempMat);
+    mat4.multiply(this.tempMat, this.centerMatInv, this.mouseRotCurrent);
+};
+
 
 papaya.viewer.ScreenSurface.prototype.clearTransform = function (xform) {
     mat4.identity(xform);

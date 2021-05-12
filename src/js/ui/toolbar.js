@@ -996,6 +996,7 @@ papaya.ui.Toolbar.prototype.doAction = function (action, file, keepopen) {
               this.viewer.screenVolumes[ctr].resetTransform();
               this.viewer.screenVolumes[ctr].updateTransform();
             }
+            this.viewer.surfaceView.resetRotation();
             this.viewer.surfaceView.updateActivePlanes();
             this.viewer.drawViewer(true, false);
         }
