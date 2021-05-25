@@ -96,14 +96,22 @@ papaya.ui.Dialog.prototype.showDialog = function () {
                 }
 
                 html += "<tr><td class='" + PAPAYA_DIALOG_CONTENT_LABEL_CSS + "'>" + this.content.items[ctr].label +
-                    "</td><td class='" + PAPAYA_DIALOG_CONTENT_CONTROL_CSS + "'><select " + disabled +
-                    " id='" + this.content.items[ctr].field + "'>";
-                for (ctrOpt = 0; ctrOpt < this.content.items[ctr].options.length; ctrOpt += 1) {
-                    html += "<option value='" + this.content.items[ctr].options[ctrOpt] + "'>" +
-                        papaya.utilities.StringUtils.truncateMiddleString(this.content.items[ctr].options[ctrOpt].toString(), 40) + "</option>";
+                    "</td><td class='" + PAPAYA_DIALOG_CONTENT_CONTROL_CSS + "'>"
+
+                if (this.content.items[ctr].options) {
+                    html += "<select " + disabled +
+                        " id='" + this.content.items[ctr].field + "'>";
+                    for (ctrOpt = 0; ctrOpt < this.content.items[ctr].options.length; ctrOpt += 1) {
+                        html += "<option value='" + this.content.items[ctr].options[ctrOpt] + "'>" +
+                            papaya.utilities.StringUtils.truncateMiddleString(this.content.items[ctr].options[ctrOpt].toString(), 40) + "</option>";
+                    }
+
+                    html += "</select>";
+                } else {
+                    html += "<input type='text' id='" + this.content.items[ctr].field + "'/>";
                 }
 
-                html += "</select></td></tr>";
+                html += "</td></tr>";
 
                 if (this.content.items[ctr].help) {
                     html += "<tr><td colspan='2' class='" + PAPAYA_DIALOG_CONTENT_HELP + "'>" + this.content.items[ctr].help + "</td></tr>";

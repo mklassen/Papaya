@@ -223,7 +223,10 @@ papaya.ui.Toolbar.PREFERENCES_DATA = {
             "disabled": "container.disableScrollWheel"},
         {"spacer": "true"},
         {"label": "Smooth display:", "field": "smoothDisplay", "options": ["Yes", "No"]},
-        {"label": "Radiological display:", "field": "radiological", "options": ["Yes", "No"]}
+        {"label": "Radiological display:", "field": "radiological", "options": ["Yes", "No"]},
+        {"spacer": "true"},
+        {"label": "Default min range:", "field": "minRange"},
+        {"label": "Default max range:", "field": "maxRange"}
     ]
 };
 

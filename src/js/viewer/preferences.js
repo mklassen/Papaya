@@ -24,6 +24,8 @@ papaya.viewer.Preferences = papaya.viewer.Preferences || function () {
     this.showSurfaceCrosshairs = papaya.viewer.Preferences.DEFAULT_SHOW_SURFACE_CROSSHAIRS;
     this.showVolumeBoundaries = papaya.viewer.Preferences.DEFAULT_SHOW_VOLUME_BOUNDARIES;
     this.showSurfaceBoundaries = papaya.viewer.Preferences.DEFAULT_SHOW_SURFACE_BOUNDARIES;
+    this.minRange = papaya.viewer.Preferences.DEFAULT_MIN_RANGE;
+    this.maxRange = papaya.viewer.Preferences.DEFAULT_MAX_RANGE;
 };
 
 
@@ -31,7 +33,7 @@ papaya.viewer.Preferences = papaya.viewer.Preferences || function () {
 
 papaya.viewer.Preferences.ALL_PREFS = ["showCrosshairs", "atlasLocks", "showOrientation", "scrollBehavior",
     "smoothDisplay", "radiological", "showRuler", "surfaceBackgroundColor", "showSurfacePlanes", "showVolumeBoundaries",
-    "showSurfaceBoundaries"];
+    "showSurfaceBoundaries", "minRange", "maxRange"];
 papaya.viewer.Preferences.COOKIE_PREFIX = "papaya-";
 papaya.viewer.Preferences.COOKIE_EXPIRY_DAYS = 365;
 papaya.viewer.Preferences.DEFAULT_SHOW_CROSSHAIRS = "Yes";
@@ -44,8 +46,11 @@ papaya.viewer.Preferences.DEFAULT_SHOW_RULER = "No";
 papaya.viewer.Preferences.DEFAULT_SURFACE_BACKGROUND_COLOR = "Gray";
 papaya.viewer.Preferences.DEFAULT_SHOW_SURFACE_PLANES = "Yes";
 papaya.viewer.Preferences.DEFAULT_SHOW_SURFACE_CROSSHAIRS = "Yes";
-papaya.viewer.Preferences.DEFAULT_SHOW_VOLUME_BOUNDARIE = "No";
+papaya.viewer.Preferences.DEFAULT_SHOW_VOLUME_BOUNDARIES = "No";
 papaya.viewer.Preferences.DEFAULT_SHOW_SURFACE_BOUNDARIES = "Yes";
+papaya.viewer.Preferences.DEFAULT_MIN_RANGE = 5;
+papaya.viewer.Preferences.DEFAULT_MAX_RANGE = 12;
+
 
 /*** Prototype Methods ***/
 
