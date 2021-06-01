@@ -70,7 +70,7 @@ papaya.ui.MenuItemRange.prototype.buildHTML = function (parentId) {
     html = "<li id='" + this.id + "'>" +
                 "<span class='" + PAPAYA_MENU_UNSELECTABLE + "' style=''>" +
                     "<input class='" + PAPAYA_MENU_INPUT_FIELD + "' type='text' size='4' id='" + this.minId +
-                        "' value='" + range[0] + "' />" +
+                        "' value='" + range[0].toPrecision(4) + "' />" +
                     "<div style='display:inline-block;position:relative;width:" +
                             (papaya.viewer.ColorTable.COLOR_BAR_WIDTH + papaya.viewer.ColorTable.ARROW_ICON_WIDTH) +
                             "px;top:-12px;'>" +
@@ -90,7 +90,7 @@ papaya.ui.MenuItemRange.prototype.buildHTML = function (parentId) {
                             this.viewer.screenVolumes[parseInt(this.index, 10)].colorBar + "' />" +
                     "</div>" +
                     "<input class='" + PAPAYA_MENU_INPUT_FIELD + "' type='text' size='4' id='" + this.maxId +
-                        "' value='" + range[1] + "' />" +
+                        "' value='" + range[1].toPrecision(4) + "' />" +
                 "</span>" +
            "</li>";
 
@@ -228,8 +228,8 @@ papaya.ui.MenuItemRange.prototype.updateDataSource = function (focusMax) {
         max = this.dataSource.screenMax;
     }
 
-    minHtml.val(min);
-    maxHtml.val(max);
+    minHtml.val(min.toPrecision(4));
+    maxHtml.val(max.toPrecision(4));
 
     if (this.negatives) {
         this.dataSource.setScreenRangeNegatives(min, max);
