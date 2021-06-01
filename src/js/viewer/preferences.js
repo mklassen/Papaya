@@ -48,8 +48,8 @@ papaya.viewer.Preferences.DEFAULT_SHOW_SURFACE_PLANES = "Yes";
 papaya.viewer.Preferences.DEFAULT_SHOW_SURFACE_CROSSHAIRS = "Yes";
 papaya.viewer.Preferences.DEFAULT_SHOW_VOLUME_BOUNDARIES = "No";
 papaya.viewer.Preferences.DEFAULT_SHOW_SURFACE_BOUNDARIES = "Yes";
-papaya.viewer.Preferences.DEFAULT_MIN_RANGE = 5;
-papaya.viewer.Preferences.DEFAULT_MAX_RANGE = 12;
+papaya.viewer.Preferences.DEFAULT_MIN_RANGE = 3.28;
+papaya.viewer.Preferences.DEFAULT_MAX_RANGE = 10;
 
 
 /*** Prototype Methods ***/
