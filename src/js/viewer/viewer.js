@@ -2739,19 +2739,30 @@ papaya.viewer.Viewer.prototype.getNiceFilename = function (index) {
     var found = false;
 
     truncateText = "...";
-
     filename = this.screenVolumes[index].volume.fileName;
-    for (var ctr=0; ctr<papayaLoadableImages.length; ctr++) {
-        data = papayaLoadableImages[ctr];
-        if (data.hasOwnProperty('url') && data.hasOwnProperty('nicename') && data.url.endsWith(filename)) {
-            filename = data.nicename;
-            found = true;
-            break;
-        }
+    if (this.screenVolumes[index].volume.params[filename] && this.screenVolumes[index].volume.params[filename].nicename) {
+      filename = this.screenVolumes[index].volume.params[filename].nicename;
+      found = true;
+      if (this.screenVolumes[index].negative) {
+        filename += " (Neg)";
+      }
+    }
+    else {
+      for (var ctr=0; ctr<papayaLoadableImages.length; ctr++) {
+          data = papayaLoadableImages[ctr];
+          if (data.hasOwnProperty('url') && data.hasOwnProperty('nicename') && data.url.endsWith(filename)) {
+              filename = data.nicename;
+              found = true;
+              break;
+          }
+      }
     }
 
     if (!found) {
-      filename = filename.replace(".nii", "").replace(".gz", "");
+      filename = filename.replace(
+        ".nii", "").replace(
+          ".gz", "").replace(
+            ".gii", "");
     }
 
     if (filename.length > papaya.viewer.Viewer.TITLE_MAX_LENGTH) {
