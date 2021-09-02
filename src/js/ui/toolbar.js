@@ -518,6 +518,7 @@ papaya.ui.Toolbar.prototype.buildMenuItems = function (menu, itemData, topLevelB
     }
 
     for (ctrItems = 0; ctrItems < itemData.length; ctrItems += 1) {
+        item = null;
         if (!itemData[ctrItems].required || ((papaya.utilities.ObjectUtils.bind(this.container,
                 papaya.utilities.ObjectUtils.dereferenceIn(this.container,
                 itemData[ctrItems].required)))(parseInt(modifier)) === true)) {
@@ -562,8 +563,6 @@ papaya.ui.Toolbar.prototype.buildMenuItems = function (menu, itemData, topLevelB
                 item = new papaya.ui.MenuItem(this.viewer, itemData[ctrItems].label, itemData[ctrItems].action,
                     papaya.utilities.ObjectUtils.bind(this, this.doAction), dataSource, itemData[ctrItems].method, modifier);
             }
-        } else {
-            item = null;
         }
 
         if (item) {
