@@ -816,6 +816,8 @@ papaya.viewer.Viewer.prototype.initializeOverlay = function () {
             overlay.rotationAbout = this.screenVolumes[0].rotationAbout;
             overlay.updateTransform();
 
+            overlay.hidden = (screenParams && screenParams.hidden);
+
             this.screenVolumes[this.screenVolumes.length] = overlay;
             this.setCurrentScreenVol(this.screenVolumes.length - 1);
 
