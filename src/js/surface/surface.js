@@ -366,16 +366,17 @@ papaya.surface.Surface.prototype.generateColorData = function () {
   var ctr;
   var ctr2;
   var data = [];
-  for (ctr=0; ctr < this.parametricData.length; ctr++) {
+  for (ctr=this.parametricData.length - 1; ctr >= 0; ctr--) {
     if (this.parametricData[ctr].data && this.parametricData[ctr].data.length === nPoints) {
       this.parametricData[ctr].positiveVolume = null;
       this.parametricData[ctr].negativeVolume = null;
       for(ctr2 = 0; ctr2 < this.parametricData[ctr].viewer.screenVolumes.length; ctr2++) {
-        if (this.parametricData[ctr].viewer.screenVolumes[ctr2].volume === this.parametricData[ctr].volume) {
-          if (this.parametricData[ctr].viewer.screenVolumes[ctr2].negative) {
-            this.parametricData[ctr].negativeVolume = this.parametricData[ctr].viewer.screenVolumes[ctr2];
+        let vol = this.parametricData[ctr].viewer.screenVolumes[ctr2];
+        if ((vol.volume === this.parametricData[ctr].volume) && !vol.hidden) {
+          if (vol.negative) {
+            this.parametricData[ctr].negativeVolume = vol;
           } else {
-            this.parametricData[ctr].positiveVolume = this.parametricData[ctr].viewer.screenVolumes[ctr2];
+            this.parametricData[ctr].positiveVolume = vol;
           }
         }
       }
