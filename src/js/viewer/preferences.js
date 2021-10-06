@@ -26,11 +26,18 @@ papaya.viewer.Preferences = papaya.viewer.Preferences || function () {
     this.showSurfaceBoundaries = papaya.viewer.Preferences.DEFAULT_SHOW_SURFACE_BOUNDARIES;
     this.minRange = papaya.viewer.Preferences.DEFAULT_MIN_RANGE;
     this.maxRange = papaya.viewer.Preferences.DEFAULT_MAX_RANGE;
+    for (var key in papaya.viewer.Preferences.CUSTOM_PREFS) {
+      // check if the property/key is defined in the object itself, not in parent
+      if (papaya.viewer.Preferences.CUSTOM_PREFS.hasOwnProperty(key)) {
+        this[key] = papaya.viewer.Preferences.CUSTOM_PREFS[key];
+      }
+    }
 };
 
 
 /*** Static Pseudo-constants ***/
 
+papaya.viewer.Preferences.CUSTOM_PREFS = {};
 papaya.viewer.Preferences.ALL_PREFS = ["showCrosshairs", "atlasLocks", "showOrientation", "scrollBehavior",
     "smoothDisplay", "radiological", "showRuler", "surfaceBackgroundColor", "showSurfacePlanes", "showVolumeBoundaries",
     "showSurfaceBoundaries", "minRange", "maxRange"];
