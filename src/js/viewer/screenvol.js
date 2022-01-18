@@ -602,28 +602,28 @@ papaya.viewer.ScreenVolume.prototype.updateTransform = function () {
         rotZ = (this.rotationZ - 0.5) * 180,
         centerX, centerY, centerZ;
 
-    if (this.rotationAbout === "Rotate About Origin") {
-        centerX = this.volume.header.origin.x * this.volume.header.voxelDimensions.xSize;
-        centerY = this.volume.header.origin.y * this.volume.header.voxelDimensions.ySize;
-        centerZ = this.volume.header.origin.z * this.volume.header.voxelDimensions.zSize;
-    } else if (this.rotationAbout === "Rotate About Crosshairs") {
-        // Need to use the base image not the current volume
-        // Hacking assuming single papayaContainer, application specific and not generalizable
-        var baseVolume = papayaContainers[0].viewer.screenVolumes[0].volume;
-        if (this.volume === baseVolume) {
+    // Need to use the base image not the current volume
+    // Hacking assuming single papayaContainer, application specific and not generalizable
+    var baseVolume = papayaContainers[0].viewer.screenVolumes[0].volume;
+    if (this.volume === baseVolume) {
+      if (this.rotationAbout === "Rotate About Origin") {
+          centerX = this.volume.header.origin.x * this.volume.header.voxelDimensions.xSize;
+          centerY = this.volume.header.origin.y * this.volume.header.voxelDimensions.ySize;
+          centerZ = this.volume.header.origin.z * this.volume.header.voxelDimensions.zSize;
+      } else if (this.rotationAbout === "Rotate About Crosshairs") {
           centerX = this.currentCoord.x * this.volume.header.voxelDimensions.xSize;
           centerY = this.currentCoord.y * this.volume.header.voxelDimensions.ySize;
           centerZ = this.currentCoord.z * this.volume.header.voxelDimensions.zSize;
-        }
-        else {
-          centerX = baseVolume.transform.centerMatInverse[0][3];
-          centerY = baseVolume.transform.centerMatInverse[1][3];
-          centerZ = baseVolume.transform.centerMatInverse[2][3];
-        }
-    } else {
-        centerX = (this.volume.header.imageDimensions.xDim / 2) * this.volume.header.voxelDimensions.xSize;
-        centerY = (this.volume.header.imageDimensions.yDim / 2) * this.volume.header.voxelDimensions.ySize;
-        centerZ = (this.volume.header.imageDimensions.zDim / 2) * this.volume.header.voxelDimensions.zSize;
+      } else {
+          centerX = (this.volume.header.imageDimensions.xDim / 2) * this.volume.header.voxelDimensions.xSize;
+          centerY = (this.volume.header.imageDimensions.yDim / 2) * this.volume.header.voxelDimensions.ySize;
+          centerZ = (this.volume.header.imageDimensions.zDim / 2) * this.volume.header.voxelDimensions.zSize;
+      }
+    }
+    else {
+      centerX = baseVolume.transform.centerMatInverse[0][3];
+      centerY = baseVolume.transform.centerMatInverse[1][3];
+      centerZ = baseVolume.transform.centerMatInverse[2][3];
     }
 
     this.volume.transform.updateImageMat(centerX, centerY, centerZ, rotX, rotY, rotZ);
