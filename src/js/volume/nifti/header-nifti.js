@@ -265,7 +265,7 @@ papaya.volume.nifti.HeaderNIFTI.prototype.getOrigin = function (forceQ, forceS) 
             someOffsets[1] = ((this.nifti.qoffset_y / this.nifti.pixDims[yIndex + 1])) * (yFlip ? -1 : 1);
             someOffsets[2] = ((this.nifti.qoffset_z / this.nifti.pixDims[zIndex + 1])) * (zFlip ? -1 : 1);
 
-            origin.setCoordinate(someOffsets[0], someOffsets[1], someOffsets[2], true);
+            origin.setCoordinate(someOffsets[0], someOffsets[1], someOffsets[2], false);
         }
     } else if ((this.nifti.sform_code > 0) && !forceQ) {
         if (this.sFormHasRotations()) {

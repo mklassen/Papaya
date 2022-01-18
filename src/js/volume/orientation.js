@@ -84,12 +84,12 @@ papaya.volume.Orientation.prototype.convertIndexToOffset = function (xLoc, yLoc,
 
 
 papaya.volume.Orientation.prototype.convertCoordinate = function (coord, coordConverted) {
-    coordConverted.x = papayaRoundFast((coord.x * this.orientMat[0][0]) + (coord.y * this.orientMat[0][1]) +
-        (coord.z * this.orientMat[0][2]) + (this.orientMat[0][3]));
-    coordConverted.y = papayaRoundFast((coord.x * this.orientMat[1][0]) + (coord.y * this.orientMat[1][1]) +
-        (coord.z * this.orientMat[1][2]) + (this.orientMat[1][3]));
-    coordConverted.z = papayaRoundFast((coord.x * this.orientMat[2][0]) + (coord.y * this.orientMat[2][1]) +
-        (coord.z * this.orientMat[2][2]) + (this.orientMat[2][3]));
+    coordConverted.x = (coord.x * this.orientMat[0][0]) + (coord.y * this.orientMat[0][1]) +
+        (coord.z * this.orientMat[0][2]) + (this.orientMat[0][3]);
+    coordConverted.y = (coord.x * this.orientMat[1][0]) + (coord.y * this.orientMat[1][1]) +
+        (coord.z * this.orientMat[1][2]) + (this.orientMat[1][3]);
+    coordConverted.z = (coord.x * this.orientMat[2][0]) + (coord.y * this.orientMat[2][1]) +
+        (coord.z * this.orientMat[2][2]) + (this.orientMat[2][3]);
     return coordConverted;
 };
 
