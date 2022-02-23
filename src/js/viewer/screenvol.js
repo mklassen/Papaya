@@ -604,7 +604,12 @@ papaya.viewer.ScreenVolume.prototype.updateTransform = function () {
 
     // Need to use the base image not the current volume
     // Hacking assuming single papayaContainer, application specific and not generalizable
-    var baseVolume = papayaContainers[0].viewer.screenVolumes[0].volume;
+    var baseVolume = this.volume;
+    try {
+      baseVolume = papayaContainers[0].viewer.screenVolumes[0].volume || this.volume;
+    }
+    catch (e) {}
+
     if (this.volume === baseVolume) {
       if (this.rotationAbout === "Rotate About Origin") {
           centerX = this.volume.header.origin.x * this.volume.header.voxelDimensions.xSize;
