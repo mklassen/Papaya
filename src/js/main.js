@@ -296,6 +296,7 @@ papaya.Container.fillContainerHTML = function (containerHTML, isDefault, params,
             "' class='" + PAPAYA_DISPLAY_CSS + "'></div>");
 
         if (params && params.showControlBar && ((params.showControls === undefined) || params.showControls)) {
+            let button = typeof(loadCorrelation) !== "function" ? "" : "<button type='button' " + ((params.kioskMode && ((params.showImageButtons === undefined) || params.showImageButtons)) ? "" : "style='float:right;margin-left:5px;' ") + "onclick='loadCorrelation()'>Correlation</button> ";
             containerHTML.append(
                 "<div id='" + PAPAYA_KIOSK_CONTROLS_CSS + index + "' class='" + PAPAYA_KIOSK_CONTROLS_CSS + "'>" +
                 "<div id='" + (PAPAYA_DEFAULT_SLIDER_ID + index) + "main" + "' class='" + PAPAYA_SLIDER_CSS + " " + PAPAYA_CONTROL_MAIN_SLIDER + "'>" +
@@ -317,7 +318,7 @@ papaya.Container.fillContainerHTML = function (containerHTML, isDefault, params,
                 "<div id='" + (PAPAYA_DEFAULT_SLIDER_ID + index) + "series" + "' class='" + PAPAYA_SLIDER_CSS + " " + PAPAYA_CONTROL_DIRECTION_SLIDER + "'>" +
                 "<span class='" + PAPAYA_CONTROL_BAR_LABELS_CSS+ "'>Series: </span>" + " <button type='button' class='" + PAPAYA_CONTROL_INCREMENT_BUTTON_CSS + "'>&lt;</button>"+ " <button type='button' class='" + PAPAYA_CONTROL_INCREMENT_BUTTON_CSS + "'>&gt;</button> "  +
                 "</div>" +
-                "&nbsp;&nbsp;&nbsp;" +
+                "&nbsp;&nbsp;&nbsp;" + button +
                 "<button type='button' " + ((params.kioskMode && ((params.showImageButtons === undefined) || params.showImageButtons)) ? "" : "style='float:right;margin-left:5px;' ") + "class='" + PAPAYA_CONTROL_SWAP_BUTTON_CSS + "'>Swap View</button> " +
                 "<button type='button' " + ((params.kioskMode && ((params.showImageButtons === undefined) || params.showImageButtons)) ? "" : "style='float:right;margin-left:5px;' ") + "class='" + PAPAYA_CONTROL_GOTO_CENTER_BUTTON_CSS + "'>Go To Center</button> " +
                 "<button type='button' " + ((params.kioskMode && ((params.showImageButtons === undefined) || params.showImageButtons)) ? "" : "style='float:right;margin-left:5px;' ") + "class='" + PAPAYA_CONTROL_GOTO_ORIGIN_BUTTON_CSS + "'>Go To Origin</button> " +
