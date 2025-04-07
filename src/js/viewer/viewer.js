@@ -2980,7 +2980,7 @@ papaya.viewer.Viewer.prototype.getOrientationCertaintyColor = function () {
 
 
 papaya.viewer.Viewer.prototype.isUsingAtlas = function (name) {
-    return (name === this.atlas.currentAtlas);
+    return (this.atlas && name === this.atlas.currentAtlas);
 };
 
 
