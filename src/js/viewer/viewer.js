@@ -923,7 +923,7 @@ papaya.viewer.Viewer.prototype.loadAtlas = function () {
 
     if (this.atlas === null) {
         // Check is the viewer's container has a named atlas and load it
-        let atlas = this.container?.params?.atlas;
+        let atlas = this.container.params.atlas;
         let value = Array.isArray(atlas) ? atlas[0] : atlas;
         if (value)
         {
