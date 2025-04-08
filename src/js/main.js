@@ -296,7 +296,7 @@ papaya.Container.fillContainerHTML = function (containerHTML, isDefault, params,
             "' class='" + PAPAYA_DISPLAY_CSS + "'></div>");
 
         if (params && params.showControlBar && ((params.showControls === undefined) || params.showControls)) {
-            let button = typeof(loadCorrelation) !== "function" ? "" : "<button type='button' " + ((params.kioskMode && ((params.showImageButtons === undefined) || params.showImageButtons)) ? "" : "style='float:right;margin-left:5px;' ") + "onclick='loadCorrelation()'>Correlation</button> ";
+            var button = typeof(loadCorrelation) !== "function" ? "" : "<button type='button' " + ((params.kioskMode && ((params.showImageButtons === undefined) || params.showImageButtons)) ? "" : "style='float:right;margin-left:5px;' ") + "onclick='loadCorrelation()'>Correlation</button> ";
             containerHTML.append(
                 "<div id='" + PAPAYA_KIOSK_CONTROLS_CSS + index + "' class='" + PAPAYA_KIOSK_CONTROLS_CSS + "'>" +
                 "<div id='" + (PAPAYA_DEFAULT_SLIDER_ID + index) + "main" + "' class='" + PAPAYA_SLIDER_CSS + " " + PAPAYA_CONTROL_MAIN_SLIDER + "'>" +

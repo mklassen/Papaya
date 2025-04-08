@@ -371,7 +371,7 @@ papaya.surface.Surface.prototype.generateColorData = function () {
       this.parametricData[ctr].positiveVolume = null;
       this.parametricData[ctr].negativeVolume = null;
       for(ctr2 = 0; ctr2 < this.parametricData[ctr].viewer.screenVolumes.length; ctr2++) {
-        let vol = this.parametricData[ctr].viewer.screenVolumes[ctr2];
+        var vol = this.parametricData[ctr].viewer.screenVolumes[ctr2];
         if ((vol.volume === this.parametricData[ctr].volume) && !vol.hidden) {
           if (vol.negative) {
             this.parametricData[ctr].negativeVolume = vol;
