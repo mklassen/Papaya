@@ -1183,7 +1183,7 @@ papaya.Container.prototype.hasImageToLoad = function () {
 
 
 papaya.Container.prototype.hasAtlasToLoad = function () {
-    return (papaya.Container.atlas == null) && this.viewer.hasDefinedAtlas();
+    return (this.viewer.atlas == null) && this.viewer.hasDefinedAtlas();
 };
 
 
