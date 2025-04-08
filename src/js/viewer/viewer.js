@@ -922,11 +922,24 @@ papaya.viewer.Viewer.prototype.loadAtlas = function () {
     var viewer = this;
 
     if (this.atlas === null) {
-        if (!papaya.data.Atlas.data) {
-          papaya.data.Atlas.atlas = new papaya.viewer.Atlas(papaya.data.Atlas, this.container,
-            papaya.utilities.ObjectUtils.bind(viewer, viewer.atlasLoaded));
+        // Check is the viewer's container has a named atlas and load it
+        let atlas = this.container?.params?.atlas;
+        let value = Array.isArray(atlas) ? atlas[0] : atlas;
+        if (value)
+        {
+          let data = papaya.data.Atlases[value];
+          if (!data.atlas) {
+            data.atlas = new papaya.viewer.Atlas(papaya.data.Atlases[value], this.container,
+              papaya.utilities.ObjectUtils.bind(viewer, viewer.atlasLoaded));
+          }
+          this.atlas = data.atlas
+        } else {
+          if (!papaya.data.Atlas.data) {
+            papaya.data.Atlas.atlas = new papaya.viewer.Atlas(papaya.data.Atlas, this.container,
+              papaya.utilities.ObjectUtils.bind(viewer, viewer.atlasLoaded));
+          }
+          papaya.Container.atlas = this.atlas = papaya.data.Atlas.atlas;
         }
-        papaya.Container.atlas = this.atlas = papaya.data.Atlas.atlas;
     }
 };
 
