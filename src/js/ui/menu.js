@@ -263,7 +263,7 @@ papaya.ui.Menu.prototype.showContextMenu = function () {
                 });
             } else {
                 menuHtml.css({
-                    position: 'absolute',
+                    position: 'fixed',
                     zIndex: 100,
                     left: this.viewer.contextMenuMousePositionX + this.viewer.canvasRect.left,
                     top: this.viewer.contextMenuMousePositionY + this.viewer.canvasRect.top - offset
